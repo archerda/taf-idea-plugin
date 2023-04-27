@@ -8,12 +8,25 @@
     <name>Taf Helper</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="archerda@qq.com" url="https://archerda.github.com">archerda</vendor>
+    <vendor email="archerda@qq.com" url="https://archerda.github.io/">archerda</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
-    <description>taf helper taf helper taf helper taf helper taf helper taf helper taf helper taf helper</description>
+    <description><![CDATA[
+      <tag> Taf helper can help you to jump file between api and impl. </tag>
+      <h3>English:</h3>
+      <ul>
+      <li>Jump to impl method from prx.</li>
+      <li>Jump to prx method from impl.</li>
+
+      <h3>中文：</h3>
+      <ul>
+      <li>从调用方，快速跳转到taf接口的实现地方。</li>
+      <li>从实现方，快速跳转到prx的接口声明。</li>
+      </ul>
+    ]]>
+    </description>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
@@ -30,8 +43,8 @@
     <actions>
         <action id="goToImplAction"
                 class="com.archerda.idea.plugin.taf.action.GoToImplAction"
-                text="跳转prx实现方法"
-                description="跳转prx实现方法">
+                text="跳转taf实现方法"
+                description="跳转taf实现方法">
             <add-to-group group-id="GoToCodeGroup" anchor="before" relative-to-action="goToImplAction"/>
             <add-to-group group-id="EditorPopupMenu.GoTo" anchor="before" relative-to-action="goToImplAction"/>
         </action>

@@ -5,6 +5,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.search.PsiShortNamesCache;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TafMethodGoToImplHandler extends BaseGoToImplHandler {
 
     private final AnActionEvent anActionEvent;
@@ -18,7 +21,7 @@ public class TafMethodGoToImplHandler extends BaseGoToImplHandler {
     @Override
     public void doHandle() {
         super.doHandle();
-        String jumpContent = null;
+        List<String> jumpContentList = new ArrayList<>();
         String prxClassName = null;
         String prxImplClassName = null;
         if (currentPsiElement instanceof PsiMethod) {
@@ -26,7 +29,8 @@ public class TafMethodGoToImplHandler extends BaseGoToImplHandler {
             String methodName = psiMethod.getName();
             methodName = methodName.replace("async_", "");
             methodName = methodName.replace("promise_", "");
-            jumpContent = "public int " + methodName + "(";
+            jumpContentList.add("public int " + methodName + "(");
+            jumpContentList.add("public CompletableFuture<Integer> " + methodName + "(");
             PsiElement parentElement = psiMethod.getParent();
             PsiClass psiClass = (PsiClass) parentElement;
             prxClassName = psiClass.getName();
@@ -34,7 +38,7 @@ public class TafMethodGoToImplHandler extends BaseGoToImplHandler {
         } else if (currentPsiElement instanceof  PsiClass) {
             PsiClass psiClass = (PsiClass) currentPsiElement;
             prxImplClassName = psiClass.getName().replace("Prx", "ServantImpl");
-            jumpContent = "public class " + prxImplClassName + " implements";
+            jumpContentList.add("public class " + prxImplClassName + " implements");
         } else {
             return;
         }
@@ -45,15 +49,17 @@ public class TafMethodGoToImplHandler extends BaseGoToImplHandler {
             return;
         }
         PsiFile[] tafImplPsiFiles = PsiShortNamesCache.getInstance(project).getFilesByName(prxImplClassName + ".java");
-        this.doLocate(project, jumpContent, tafImplPsiFiles);
+        this.doLocate(project, jumpContentList, tafImplPsiFiles);
     }
 
-    private void doLocate(Project project, String content, PsiFile[] psiFiles) {
+    private void doLocate(Project project, List<String> jumpContentList, PsiFile[] psiFiles) {
         if (project == null || anActionEvent.getProject() == null) {
             return;
         }
         for (PsiFile file : psiFiles) {
-            super.doLocate(project, content, file);
+            for (String jumpContent : jumpContentList) {
+                super.doLocate(project, jumpContent, file);
+            }
         }
     }
 }
